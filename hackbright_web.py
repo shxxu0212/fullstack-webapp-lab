@@ -1,14 +1,16 @@
 """A web application for tracking projects, students, and student grades."""
 
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, flash
 
 import hackbright
 
 app = Flask(__name__)
+app.secret_key = 'omgsosecret'
+
 
 @app.route("/student-add")
 def student_add():
-    """Add a student landing page."""
+    """Add a new student landing page."""
 
     return render_template("create_student.html")
 
@@ -21,7 +23,7 @@ def create_student():
     github = request.form.get('github')
 
     hackbright.make_new_student(first_name, last_name, github)
-    flash("thanks for adding {} {} with github {}".format(
+    flash("Thanks for adding {} {} with github {}".format(
         first_name, last_name, github))
 
     return redirect('/student?github={}'.format(github))
@@ -43,6 +45,32 @@ def home_page():
 
     return render_template("home.html", names=names, projects=projects)
 
+@app.route("/grading")
+def input_grades():
+    """Grade Students, landing page"""
+
+    names = hackbright.get_all_students()
+    projects = hackbright.get_all_projects()
+
+    return render_template("grading.html", names=names, projects=projects)
+
+@app.route("/assign-grade", methods=["POST"])
+def set_grades():
+    """Add new grade to database"""
+
+    github = request.form.get('student')
+    title = request.form.get('project')
+    grade = request.form.get('grade')
+
+    grades = hackbright.get_grades_by_title(title)
+
+    for grade in grades:
+      if github in grade:
+        hackbright.update_grade(github, title, grade)
+      else:
+        hackbright.assign_grade(github, title, grade)
+
+    return redirect("/")
 
 @app.route("/student")
 def get_student():
@@ -62,6 +90,12 @@ def get_student():
     # return "{acct} is the GitHub account for {first} {last}".format(
     #     acct=github, first=first, last=last)
 
+@app.route("/project-add")
+def project_add():
+    """Add a new project landing page."""
+
+    return render_template("create_project.html")
+
 @app.route("/create-project", methods=['POST'])
 def create_project():
     """Add a project."""
@@ -70,10 +104,9 @@ def create_project():
     description = request.form.get('description')
     max_grade = request.form.get('max_grade')
 
-    hackbright.make_new_student(title, description, max_grade)
+    hackbright.make_new_project(title, description, max_grade)
 
-    flash("thanks for adding {} {} with github {}".format(
-        first_name, last_name, github))
+    flash("Thanks for adding {}".format(title))
 
     return redirect('/project?title={}'.format(title))
 

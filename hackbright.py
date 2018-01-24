@@ -100,25 +100,24 @@ def get_project_by_title(title):
 
     return row
 
-def make_new_project(title, last_name, github):
-    """Add a new student and print confirmation.
+def make_new_project(title, description, max_grade):
+    """Add a new project.
 
-    Given a first name, last name, and GitHub account, add student to the
+    Given a title, description, and max grade add project to the
     database and print a confirmation message.
     """
 
     QUERY = """
-        INSERT INTO Students (first_name, last_name, github)
-          VALUES (:first_name, :last_name, :github)
+        INSERT INTO Projects (title, description, max_grade)
+          VALUES (:title, :description, :max_grade)
         """
 
-    db.session.execute(QUERY, {'first_name': first_name,
-                               'last_name': last_name,
-                               'github': github})
+    db.session.execute(QUERY, {'title': title,
+                               'description': description,
+                               'max_grade': max_grade})
     db.session.commit()
 
-    print "Successfully added student: {first} {last}".format(
-        first=first_name, last=last_name)
+    print "Successfully added project: {}".format(title)
 
 def get_grade_by_github_title(github, title):
     """Print grade student received for a project."""
@@ -146,6 +145,23 @@ def assign_grade(github, title, grade):
     QUERY = """
         INSERT INTO Grades (student_github, project_title, grade)
           VALUES (:github, :title, :grade)
+        """
+
+    db_cursor = db.session.execute(QUERY, {'github': github,
+                                           'title': title,
+                                           'grade': grade})
+
+    db.session.commit()
+
+    print "Successfully assigned grade of {grade} for {acct} in {title}".format(
+        grade=grade, acct=github, title=title)
+
+
+def update_grade(github, title, grade):
+    """Update a student's grade on an assignment and print a confirmation."""
+
+    QUERY = """
+        UPDATE Grades SET grade=:grade WHERE github=:github AND title=:title
         """
 
     db_cursor = db.session.execute(QUERY, {'github': github,
