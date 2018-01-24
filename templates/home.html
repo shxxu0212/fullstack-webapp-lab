@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+    <title>Welcome!</title>
+</head>
+
+<body>
+<h2>Students</h2>
+<ul>{% for first, last, github in names %}
+<li><a href="/student?github={{ github }}">{{ " ".join([first,last]) }}</a></li>
+{% endfor %}</ul>
+
+<h2> Projects </h2>
+<ul>{% for project in projects %}
+<li><a href="/project?title={{project}}">{{ project }}</a></li>
+{% endfor %}</ul>
+
+</body>
+</html>

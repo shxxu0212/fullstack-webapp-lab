@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head>
+    {% block title %}
+</head>
+
+<body>
+
+<h1> Success! </h1>
+<p> You have added student:<br>
+  First name: {{ first_name }}<br>
+  Last name: {{ last_name }}<br>
+  Github: {{ github }}
+</p>
+
+<p><a href="/student?github={{ github }}">View student page here</a>
+</body>
+</html>

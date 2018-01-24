@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+    <title>Project Info</title>
+</head>
+<body>
+  <h1>{{ title }}</h1>
+  <h2> {{ description }} </h2>
+  <h3> Max grade: {{ max_grade }} </h3>
+
+  <ul>{% for github, grade in grades %}
+    <li>{{ github }} : {{ grade }}</li>
+    {% endfor %}</ul>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+    <title>Add Student</title>
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+</head>
+
+<body>
+
+  <form action="/create-student" method="POST">
+    Enter a Student to Add:<br>
+      <label>First Name:
+          <input type="text" name="first_name">
+      </label><br>
+      <label>Last Name:
+          <input type="text" name="last_name">
+      </label><br>
+      <label>Github Username:
+        <input type="text" name="github">
+      </label>
+      <input type="submit" value="Add  Student">
+  </form>
+
+
+
+</body>
+</html>
