@@ -45,6 +45,7 @@ def home_page():
 
     return render_template("home.html", names=names, projects=projects)
 
+
 @app.route("/grading")
 def input_grades():
     """Grade Students, landing page"""
@@ -53,6 +54,7 @@ def input_grades():
     projects = hackbright.get_all_projects()
 
     return render_template("grading.html", names=names, projects=projects)
+
 
 @app.route("/assign-grade", methods=["POST"])
 def set_grades():
@@ -64,13 +66,22 @@ def set_grades():
 
     grades = hackbright.get_grades_by_title(title)
 
-    for grade in grades:
-      if github in grade:
-        hackbright.update_grade(github, title, grade)
-      else:
-        hackbright.assign_grade(github, title, grade)
+    # grades = list of tuples [ ('project', grade), etc.]
 
+    if grades:
+        for student_grade in grades:
+          import pdb; pdb.set_trace()
+          if github == student_grade[0]:
+                print "I'm in the if statement"
+                hackbright.update_grade(github, title, grade)
+                return redirect("/")
+    hackbright.assign_grade(github, title, grade)
     return redirect("/")
+
+    # PROBLEMS:
+    # 1. updating grade for existing project just adds new entry
+    # 2. can't create grade for a new project
+
 
 @app.route("/student")
 def get_student():
